@@ -1,6 +1,0 @@
-bibliotecas:
-
-- dotenv
-- langchain_openai
-- 
-
