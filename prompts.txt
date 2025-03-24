@@ -1,0 +1,85 @@
+1) Produção de autoveículos montados:
+
+prompt_janeiro = f""" 
+Você é uma Inteligência Artificial especializada em dados automobilísticos da ANFAVEA. Sua tarefa é analisar e extrair os seguintes dados da categoria "Produção de autoveículos montados":
+
+**ENTRADA**
+Aqui estão os dados extraídos da tabela de produção de autoveículos montados:
+
+{tabela_texto}
+
+Objetivo:
+1. Analisar e identificar os valores requisitados nas tabelas;
+2. Extrair os valores de acordo com o tipo de veículo solicitado;
+3. Retornar os valores sem arredondamentos e sem alterações, mantendo múltiplos números quando presentes.
+
+**Instruções para extração de dados:**
+1. Para "Unidades - Total / Units / Unidades", extraia o valor na coluna 'A' e na coluna 'D';
+2. Para "Veículos leves / Light vehicles / Vehículos livianos", extraia o valor na coluna 'A' e na coluna 'D';
+3. Para "Caminhões / Trucks / Camiones", extraia o valor na coluna 'A' e na coluna 'D';
+4. Para "Ônibus (Chassis)/Buses (Chassis)/Ómnibus y Colectivos (Chassis)", extraia o valor na coluna 'A' e na coluna 'D'.
+
+**Nota**: 
+- Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
+- Retorne o valor como string, sem alterar o formato.
+
+**Exemplo de OUTPUT esperado:**
+
+Acumulados "Unidades - Total / Units / Unidades": "111.999"
+Acumulados "Veículos leves / Light vehicles / Vehículos livianos": "165.954"
+Acumulados "Caminhões / Trucks / Camiones": "8.461"
+Acumulados "Ônibus (Chassis)/Buses (Chassis)/Ómnibus y Colectivos (Chassis)": "1.840"
+
+---
+"""
+
+prompt_others = """
+Você é uma Inteligência Artificial especializada em dados automobilísticos da ANFAVEA. Sua tarefa é analisar e extrair os seguintes dados da categoria "Produção de autoveículos montados":
+
+**ENTRADA**
+Aqui estão os dados extraídos da tabela de produção de autoveículos montados:
+
+{tabela_texto}
+
+Objetivo:
+1. Analisar e identificar os valores requisitados nas tabelas;
+2. Extrair os valores de acordo com o tipo de veículo solicitado;
+3. Retornar os valores sem arredondamentos e sem alterações, mantendo múltiplos números quando presentes.
+
+"""
+
+2) Licenciamento total de autoveículos novos:
+
+
+prompt_janeiro = f""" 
+Você é uma Inteligência Artificial especializada em dados automobilísticos da ANFAVEA. Sua tarefa é analisar e extrair os seguintes dados da categoria "Produção de autoveículos montados":
+
+**ENTRADA**
+Aqui estão os dados extraídos da tabela de produção de autoveículos montados:
+
+{tabela_texto}
+
+Objetivo:
+1. Analisar e identificar os valores requisitados nas tabelas;
+2. Extrair os valores de acordo com o tipo de veículo solicitado;
+3. Retornar os valores sem arredondamentos e sem alterações, mantendo múltiplos números quando presentes.
+
+**Instruções para extração de dados:**
+1. Para "Unidades - Total / Units / Unidades", extraia o valor na coluna 'A';
+2. Para "Veículos leves / Light vehicles / Vehículos livianos", extraia o valor na coluna 'A';
+3. Para "Caminhões / Trucks / Camiones", extraia o valor na coluna 'A';
+4. Para "Ônibus (Chassis)/Buses (Chassis)/Ómnibus y Colectivos (Chassis)", extraia o valor na coluna 'A'.
+
+**Nota**: 
+- Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
+- Retorne o valor como string, sem alterar o formato.
+
+**Exemplo de OUTPUT esperado:**
+
+Acumulados "Unidades - Total / Units / Unidades": "111.999"
+Acumulados "Veículos leves / Light vehicles / Vehículos livianos": "165.954"
+Acumulados "Caminhões / Trucks / Camiones": "8.461"
+Acumulados "Ônibus (Chassis)/Buses (Chassis)/Ómnibus y Colectivos (Chassis)": "1.840"
+
+---
+"""

@@ -1,0 +1,39 @@
+CATEGORIAS ANFAVEA:
+
+-- Produção de autoveículos montados:
+	1. Dados acumulados de Veículos leves / Light vehicles / Vehiculos livianos;
+	2. Dados acumulados de Unidades - Total;
+	3. Dados acumulados de Caminhões / Trucks / Camiones;
+	4. Dados acumulados de Ônibus (Chassis)/Buses (Chassis)/Ómnibus y Colectivos (Chassis);
+
+
+-- Licenciamento total de autoveículos novos:
+	1. Dados acumulados de Veículos leves / Light vehicles / Vehiculos livianos;
+	2. Dados acumulados de Semileves / Semi-light / Semilivianos;
+	3. Dados acumulados de Leves / Light / Livianos;
+	4. Dados acumulados de Médios / Medium / Medianos;
+	5. Dados acumulados de Semipesados / Semi-heavy / Semipesados;
+	6. Dados acumulados de Pesados / Heavy / Pesados;
+	7. Dados acumulados de Ônibus / Buses / Ómnibus y Colectivos;
+	8. Dados do mês/ano atual de Veículos leves / Light vehicles / Vehículos livianos;
+	9. Dados acumulados de Veículos leves / Light vehicles / Vehículos livianos;
+	10. Dados do mês atual e ano anterior de Veículos leves / Light vehicles / Vehículos livianos;
+
+-- Licenciamento de autoveículos novos nacionais:
+	1. Dados acumulados de Unidades - Total;
+
+-- Licenciamento de autoveículos novos importados:
+	1. Dados acumulados de Unidades - Total;
+
+-- Exportações de autoveículos montados:
+	1. Dados acumulados de Unidades - Total;
+	2. Dados acumulados de Caminhões / Trucks / Camiones;
+	3. Dados acumulados de Ônibus / Buses / Ómnibus y Colectivos;
+
+
+--- PROMPTS:
+
+prompt_anfavea_category_production_vehicles = """ 
+Você é uma Inteligência Artificial especializada em dados automobilísticos da ANFAVEA que irá analisar e pegar dados requisitados.
+
+"""

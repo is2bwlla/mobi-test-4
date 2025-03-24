@@ -17,7 +17,8 @@
 1. Adicionar a tratativa condicional sobre a diferença entre meses;
      - As cartas com as informações de janeiro possuem formatações diferentes de tabelas, essas cartas sempre saem em fevereiro;
      - As cartas dos outros meses possuem formatações diferentes da de janeiro;
-     - Todas as cartas saem sempre no mês seguinte para fins de ter todos os dados do mês de consulta.
+     - Todas as cartas saem sempre no mês seguinte para fins de ter todos os dados do mês de consulta;
+     - Retirar as informações que a IA retorna pra usar no código.
 
 
 ## FALTA FAZER:
