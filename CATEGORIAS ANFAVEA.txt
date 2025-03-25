@@ -16,8 +16,7 @@ CATEGORIAS ANFAVEA:
 	6. Dados acumulados de Pesados / Heavy / Pesados;
 	7. Dados acumulados de Ônibus / Buses / Ómnibus y Colectivos;
 	8. Dados do mês/ano atual de Veículos leves / Light vehicles / Vehículos livianos;
-	9. Dados acumulados de Veículos leves / Light vehicles / Vehículos livianos;
-	10. Dados do mês atual e ano anterior de Veículos leves / Light vehicles / Vehículos livianos;
+	9. Dados do mês atual e ano anterior de Veículos leves / Light vehicles / Vehículos livianos;
 
 -- Licenciamento de autoveículos novos nacionais:
 	1. Dados acumulados de Unidades - Total;
