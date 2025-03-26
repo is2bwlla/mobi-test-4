@@ -6,126 +6,133 @@ import pdfplumber
 from datetime import datetime
 from azure_llm import create_azure_llm 
 
-def get_page_titles(pdf_path):
-    titles = []
+mes_atual = datetime.now().month    # Define qual o mês atual para fazer uma verificação no decorrer do código
 
-    with pdfplumber.open(pdf_path) as pdf:
-        for page in pdf.pages:
-            text = page.extract_text()
-            # Extrair título da página (a lógica de extração de títulos pode variar conforme o formato do PDF)
-            lines = text.split('\n')
-            for line in lines:
-                if 'Produção de autoveículos montados' in line:
-                    titles.append("Produção de autoveículos montados")
-                elif 'Licenciamento total de autoveículos novos' in line:
-                    titles.append("Licenciamento total de autoveículos novos")
-    return titles
+titulos_relevantes = [
+    "Produção de autoveículos montados",
+    "Licenciamento total de autoveículos novos",
+    "Licenciamento de autoveículos novos nacionais",
+    "Licenciamento de autoveículos novos importados",
+    "Exportações de autoveículos montados"
+]
 
 # Configuração do Pandas para visualizar melhor a tabela
 pd.set_option("display.max_columns", None)
 pd.set_option("display.max_rows", None)
 pd.set_option("display.width", 1000)
 
-def extract_and_process_tables_anfavea(pdf_path: str):
+def get_relevant_pages_and_titles(pdf_path):
     """
-    Extrai a tabela relevante do PDF e retorna como DataFrame.
+    Lê o PDF e retorna um dicionário com os números das páginas relevantes e seus títulos correspondentes.
     """
-    print("Extraindo tabelas do PDF...")
-    tables = read_pdf(pdf_path, pages="10", lattice=False, stream=True)  # Ajuste páginas conforme necessário
-    
+    relevant_pages = {}
+
+    with pdfplumber.open(pdf_path) as pdf:
+        for page_number, page in enumerate(pdf.pages, start=1):
+            text = page.extract_text()  # Extrair título da página (a lógica de extração de títulos pode variar conforme o formato do PDF)
+            for title in titulos_relevantes:
+                if title in text:
+                    relevant_pages[page_number] = title
+                    break   # Não precisa continuar verificando outros títulos na mesma página
+
+    return relevant_pages
+
+def extract_and_process_tables_anfavea(pdf_path, relevant_pages):
+    """
+    Extrai tabelas do PDF com base nas páginas e títulos relevantes detectados.
+    Retorna um dicionário contendo as tabelas extraídas.
+    """
     extracted_data = {}
+
+    for page_number, title in relevant_pages.items():
+        print(f"Extraindo tabela da página {page_number} - {title}")
+        tables = read_pdf(pdf_path, pages=str(page_number), lattice=False, stream=True)  # Ajuste páginas conforme necessário
+
+        if tables:
+            table = tables[0]   # Considerando que a tabela de interesse está na primeira posição
+
+            # Ajuste o cabeçalho da tabela conforme o mês atual
+            if mes_atual == 2:
+                table.columns = table.iloc[1]   # Usar a segunda linha como cabeçalho
+            else:
+                table.columns = table.iloc[0]   # Usar a primeira linha como cabeçalho
+
+            table = table[1:].reset_index(drop=True)
+
+
+            # Limpar dados NaN e preencher valores vazios
+            table = table.dropna(how="all")
+            table = table.fillna('')
+
+            extracted_data[title] = table
     
-    # Processar a primeira tabela extraída
-    if tables:
-        table = tables[0]  # Pegando apenas a primeira tabela extraída
-        table.columns = table.iloc[1]  # Usar a primeira linha como cabeçalho
-        table = table[1:].reset_index(drop=True)
-
-        # Limpar NaN, removendo linhas com NaN ou substituindo por valores válidos
-        table = table.dropna(how="all")
-        table = table.fillna('')
-
-        #Adicionar os dados extraídos como DataFrame
-        extracted_data["Produção de autoveículos montados"] = table
-        print(table.columns)  # Verifica os rótulos das colunas
-
-
-        #Verificar as primeiras linhas para entender melhor a estrutura
-        # print("Primeiras linhas da tabela:")
-        # print(table.head())
-
     return extracted_data
 
-def process_pdf_and_generate_prompts(pdf_path: str):
+
+def process_pdf_and_generate_prompts(pdf_path):
     """
     Processa o PDF, extrai tabelas relevantes e gera prompts para análise com LLM.
     """
-    extracted_tables = extract_and_process_tables_anfavea(pdf_path)
-    page_titles = get_page_titles(pdf_path)
-    llm = create_azure_llm()
+    relevant_pages_and_titles = get_relevant_pages_and_titles(pdf_path)
+    extracted_tables = extract_and_process_tables_anfavea(pdf_path, relevant_pages_and_titles)
+    
+    llm = create_azure_llm()    # Essa função cria um cliente LLM conectado
 
-    mes_atual = datetime.now().month
-    print(mes_atual)
+    for title, table in extracted_tables.items();
+        print(f"\n### Dados extraídos da tabela: {title} ###")
 
-    # for page_title in page_titles:
-    #     print(f"\n### Processando dados da página: {page_title}")
+        tabela_texto = table.to_string(index=False, header=True)
 
-    #     if page_title == "Produção de autoveículos montados":
-    #         if mes_atual == 2:
-
-    #             return prompt
-            
-    #         else:
-    #             prompt = 
+        # Selecionar função de prompt baseada no título e no mês
+        prompt_fev_func, prompt_outros_func = titulos_relevantes.get(title, (None, None))
+        
+        if mes_atual == 2:
+            if titl
 
 
     # Processar a tabela extraída
-    for paginaTitulo, dadosTabela in extracted_tables.items():
-        print(f"\n### Dados extraídos da página: {paginaTitulo}")
-        print(dadosTabela)  # Aqui você vê a tabela como um DataFrame, direto
+    # for paginaTitulo, dadosTabela in extracted_tables.items():
+    #     print(f"\n### Dados extraídos da página: {paginaTitulo}")
+    #     print(dadosTabela)  # Aqui você vê a tabela como um DataFrame, direto
 
-        # Converter a tabela para string (formato legível)
-        tabela_texto = dadosTabela.to_string(index=False, header=True) # Transformando a tabela em texto
+    #     # Converter a tabela para string (formato legível)
+    #     tabela_texto = dadosTabela.to_string(index=False, header=True) # Transformando a tabela em texto
 
-        prompt = f""" 
-        Você é uma Inteligência Artificial especializada em dados automobilísticos da ANFAVEA. Sua tarefa é analisar e extrair os seguintes dados da categoria "Produção de autoveículos montados":
+    #     prompt = f""" 
+    #     Você é uma Inteligência Artificial especializada em dados automobilísticos da ANFAVEA. Sua tarefa é analisar e extrair os seguintes dados da categoria "Licenciamento total de autoveículos novos":
 
-        **ENTRADA**
-        Aqui estão os dados extraídos da tabela de produção de autoveículos montados:
+    #     **ENTRADA**
+    #     Aqui estão os dados extraídos da tabela de licenciamento total de autoveículos novos:
 
-        {tabela_texto}
+    #     {tabela_texto}
 
-        Objetivo:
-        1. Analisar e identificar os valores requisitados nas tabelas;
-        2. Extrair os valores de acordo com o tipo de veículo solicitado;
-        3. Retornar os valores sem arredondamentos e sem alterações, mantendo múltiplos números quando presentes.
+    #     Objetivo:
+    #     1. Analisar e identificar os valores requisitados nas tabelas;
+    #     2. Extrair os valores de acordo com o tipo de veículo solicitado;
+    #     3. Retornar os valores sem arredondamentos e sem alterações, mantendo múltiplos números quando presentes.
 
-        **Instruções para extração de dados:**
-        1. Para "Unidades - Total / Units / Unidades", extraia o valor na coluna 'A' e na coluna 'D';
-        2. Para "Veículos leves / Light vehicles / Vehículos livianos", extraia o valor na coluna 'A' e na coluna 'D';
-        3. Para "Caminhões / Trucks / Camiones", extraia o valor na coluna 'A' e na coluna 'D';
-        4. Para "Ônibus (Chassis)/Buses (Chassis)/Ómnibus y Colectivos (Chassis)", extraia o valor na coluna 'A' e na coluna 'D'.
+    #     **Instruções para extração de dados:**
+    #     1. Para "Veículos leves / Light vehicles / Vehiculos livianos", extraia o valor na coluna 'A' e na coluna 'C';
+    #     2. Para  "Semileves / Semi-light / Semilivianos", extraia o valor na coluna 'A' e na coluna 'C';
+    #     3. Para "Leves / Light / Livianos", extraia o valor na coluna 'A' e na coluna 'C';
+    #     4. Para "Médios / Medium / Medianos", extraia o valor na coluna 'A' e na coluna 'C';
+    #     5. Para "Semipesados / Semi-heavy / Semipesados", extraia o valor na coluna 'A' e na coluna 'C';
+    #     6. Para "Pesados / Heavy / Pesados", extraia o valor na coluna 'A' e na coluna 'C';
+    #     7. Para "Ônibus / Buses / Ómnibus y Colectivos", extraia o valor na coluna 'A' e na coluna 'C'; 
 
-        **Nota**: 
-        - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
-        - Retorne o valor como string, sem alterar o formato.
+    #     **Nota**: 
+    #     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
+    #     - Retorne o valor como string, sem alterar o formato.
 
-        **Exemplo de OUTPUT esperado:**
+    #     ---
+    #     """
 
-        Acumulados "Unidades - Total / Units / Unidades": "111.999"
-        Acumulados "Veículos leves / Light vehicles / Vehículos livianos": "165.954"
-        Acumulados "Caminhões / Trucks / Camiones": "8.461"
-        Acumulados "Ônibus (Chassis)/Buses (Chassis)/Ómnibus y Colectivos (Chassis)": "1.840"
-
-        ---
-        """
-
-        # print("\n--- Análise com LLM ---")
-        # resposta = llm.invoke([prompt])
-        # print(resposta.content)
+    #     print("\n--- Análise com LLM ---")
+    #     resposta = llm.invoke([prompt])
+    #     print(resposta.content)
 
 
 if __name__ == "__main__":
-    pdf_filename = "carta466.pdf"
+    pdf_filename = "carta453.pdf"
     pdf_path = os.path.join(os.path.dirname(__file__), pdf_filename)
     process_pdf_and_generate_prompts(pdf_path)

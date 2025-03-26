@@ -28,11 +28,3 @@ CATEGORIAS ANFAVEA:
 	1. Dados acumulados de Unidades - Total;
 	2. Dados acumulados de Caminhões / Trucks / Camiones;
 	3. Dados acumulados de Ônibus / Buses / Ómnibus y Colectivos;
-
-
---- PROMPTS:
-
-prompt_anfavea_category_production_vehicles = """ 
-Você é uma Inteligência Artificial especializada em dados automobilísticos da ANFAVEA que irá analisar e pegar dados requisitados.
-
-"""
