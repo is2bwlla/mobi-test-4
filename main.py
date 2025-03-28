@@ -6,15 +6,34 @@ import pdfplumber
 from datetime import datetime
 from azure_llm import create_azure_llm 
 
+from prompts import (
+    prompt_anfavea_production_assembled_vehicles_feb,
+    prompt_anfavea_production_assembled_vehicles,
+    prompt_total_licensing_new_vehicles_feb,
+    prompt_total_licensing_new_vehicles,
+    prompt_licensing_new_imported_vehicles_feb,
+    prompt_licensing_new_imported_vehicles,
+    vehicle_licensing_new_domestic_vehicles_feb,
+    vehicle_licensing_new_domestic_vehicles,
+    exports_assembled_vehicles_feb,
+    exports_assembled_vehicles,
+)
+
 mes_atual = datetime.now().month    # Define qual o mês atual para fazer uma verificação no decorrer do código
 
-titulos_relevantes = [
-    "Produção de autoveículos montados",
-    "Licenciamento total de autoveículos novos",
-    "Licenciamento de autoveículos novos nacionais",
-    "Licenciamento de autoveículos novos importados",
-    "Exportações de autoveículos montados"
-]
+titulos_relevantes = {
+    "Produção de autoveículos montados": (prompt_anfavea_production_assembled_vehicles_feb, 
+                                          prompt_anfavea_production_assembled_vehicles),
+    "Licenciamento total de autoveículos novos": (prompt_total_licensing_new_vehicles_feb, 
+                                                  prompt_total_licensing_new_vehicles),
+    "Licenciamento de autoveículos novos nacionais": (vehicle_licensing_new_domestic_vehicles_feb, 
+                                                      vehicle_licensing_new_domestic_vehicles),
+    "Licenciamento de autoveículos novos importados": (prompt_licensing_new_imported_vehicles_feb, 
+                                                       prompt_licensing_new_imported_vehicles),
+    "Exportações de autoveículos montados": (exports_assembled_vehicles_feb, 
+                                             exports_assembled_vehicles),
+}
+
 
 # Configuração do Pandas para visualizar melhor a tabela
 pd.set_option("display.max_columns", None)
@@ -78,7 +97,7 @@ def process_pdf_and_generate_prompts(pdf_path):
     
     llm = create_azure_llm()    # Essa função cria um cliente LLM conectado
 
-    for title, table in extracted_tables.items();
+    for title, table in extracted_tables.items():
         print(f"\n### Dados extraídos da tabela: {title} ###")
 
         tabela_texto = table.to_string(index=False, header=True)
