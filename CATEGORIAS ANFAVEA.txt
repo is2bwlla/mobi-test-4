@@ -28,3 +28,8 @@ CATEGORIAS ANFAVEA:
 	1. Dados acumulados de Unidades - Total;
 	2. Dados acumulados de Caminhões / Trucks / Camiones;
 	3. Dados acumulados de Ônibus / Buses / Ómnibus y Colectivos;
+
+Extraindo tabela da página 4 - Licenciamento de autoveículos novos nacionais
+Extraindo tabela da página 5 - Licenciamento total de autoveículos novos
+Extraindo tabela da página 9 - Exportações de autoveículos montados
+Extraindo tabela da página 10 - Produção de autoveículos montados

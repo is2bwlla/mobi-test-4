@@ -22,6 +22,11 @@ def prompt_anfavea_production_assembled_vehicles_feb(tabela_texto):
     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
     - Retorne o valor como string, sem alterar o formato.
 
+    **OUTPUT**
+    "Veículos leves / Light vehicles / Vehiculos livianos": 
+    Coluna C: value
+    Coluna E: value
+
     ---
     """
 
@@ -48,6 +53,11 @@ def prompt_anfavea_production_assembled_vehicles(tabela_texto):
     **Nota**: 
     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
     - Retorne o valor como string, sem alterar o formato.
+
+    **OUTPUT**
+    "Veículos leves / Light vehicles / Vehiculos livianos": 
+    Coluna C: value
+    Coluna E: value
 
     ---
     """
@@ -79,6 +89,11 @@ def prompt_total_licensing_new_vehicles_feb(tabela_texto):
     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
     - Retorne o valor como string, sem alterar o formato.
 
+    **OUTPUT**
+    "Veículos leves / Light vehicles / Vehiculos livianos": 
+    Coluna C: value
+    Coluna E: value
+
     ---
     """
 
@@ -109,6 +124,11 @@ def prompt_total_licensing_new_vehicles(tabela_texto):
     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
     - Retorne o valor como string, sem alterar o formato.
 
+    **OUTPUT**
+    "Veículos leves / Light vehicles / Vehiculos livianos": 
+    Coluna C: value
+    Coluna E: value
+
     ---
     """
 
@@ -132,6 +152,11 @@ def prompt_licensing_new_imported_vehicles_feb(tabela_texto):
     **Nota**: 
     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
     - Retorne o valor como string, sem alterar o formato.
+
+    **OUTPUT**
+    "Veículos leves / Light vehicles / Vehiculos livianos": 
+    Coluna C: value
+    Coluna E: value
 
     ---
     """
@@ -157,6 +182,11 @@ def prompt_licensing_new_imported_vehicles(tabela_texto):
     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
     - Retorne o valor como string, sem alterar o formato.
 
+    **OUTPUT**
+    "Veículos leves / Light vehicles / Vehiculos livianos": 
+    Coluna C: value
+    Coluna E: value
+
     ---
     """
 
@@ -181,6 +211,11 @@ def vehicle_licensing_new_domestic_vehicles_feb(tabela_texto):
     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
     - Retorne o valor como string, sem alterar o formato.
 
+    **OUTPUT**
+    "Veículos leves / Light vehicles / Vehiculos livianos": 
+    Coluna C: value
+    Coluna E: value
+
     ---
     """
 
@@ -204,6 +239,11 @@ def vehicle_licensing_new_domestic_vehicles(tabela_texto):
     **Nota**: 
     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
     - Retorne o valor como string, sem alterar o formato.
+
+    **OUTPUT**
+    "Veículos leves / Light vehicles / Vehiculos livianos": 
+    Coluna C: value
+    Coluna E: value
 
     ---
     """
@@ -231,6 +271,11 @@ def exports_assembled_vehicles_feb(tabela_texto):
     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
     - Retorne o valor como string, sem alterar o formato.
 
+    **OUTPUT**
+    "Veículos leves / Light vehicles / Vehiculos livianos": 
+    Coluna C: value
+    Coluna E: value
+
     ---
     """
 def exports_assembled_vehicles(tabela_texto):
@@ -255,6 +300,11 @@ def exports_assembled_vehicles(tabela_texto):
     **Nota**: 
     - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
     - Retorne o valor como string, sem alterar o formato.
+
+    **OUTPUT**
+    "Veículos leves / Light vehicles / Vehiculos livianos": 
+    Coluna C: value
+    Coluna E: value
 
     ---
     """
