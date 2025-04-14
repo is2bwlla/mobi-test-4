@@ -12,21 +12,22 @@ def prompt_fenabrave_monthly_summary(tabela_texto):
     ### OBJETIVO:
     1. Identificar a linha "A + B";
     2. Extrair os valores correspondentes às seguintes colunas:
-    - **Coluna A** (Total de vendas no mês atual);
-    - **Coluna C** (Vendas do mês anterior);
-    - **Coluna D** (Vendas do mesmo mês no ano anterior);
-    - **Coluna E** (Variação percentual).
+    - **Coluna A** (Total de vendas no mês atual no ano atual);
+    - **Coluna C** (Total acumulado até o mês atual no ano atual);
+    - **Coluna D** (Total de vendas do mesmo mês no ano anterior);
+    - **Coluna E** (Total acumulado até o mesmo mês no ano anterior).
 
     **Importante:**
     - Caso a célula contenha dois ou mais valores (ex: "20.395 6.976"), mantenha todos os valores **juntos, como string**.
     - Retorne exatamente o texto presente na célula, **sem arredondar ou modificar**.
+    - Ignore qualquer valor de variação percentual ou colunas de comparação (ex: (A)/(B), (A)/(D), etc).
 
     ### OUTPUT ESPERADO:
     "Resumo Mensal":  
-    Coluna A: valor  
-    Coluna C: valor  
-    Coluna D: valor  
-    Coluna E: valor  
+    Coluna A: value  
+    Coluna C: value  
+    Coluna D: value  
+    Coluna E: value  
 
     ---
     """

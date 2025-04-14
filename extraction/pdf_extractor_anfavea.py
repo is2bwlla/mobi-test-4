@@ -6,7 +6,7 @@ import pdfplumber
 from datetime import datetime
 from azure_llm import create_azure_llm 
 
-from prompts_anfavea import (
+from prompts.prompts_anfavea import (
     prompt_anfavea_production_assembled_vehicles_feb,
     prompt_anfavea_production_assembled_vehicles,
     prompt_total_licensing_new_vehicles_feb,
