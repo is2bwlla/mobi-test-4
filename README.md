@@ -306,3 +306,11 @@
 
     ---
     """
+
+
+## FASE FINAL:
+   1. Testar com pdfs de datas mais antigas;
+   2. Descobrir como testar e testar se funciona a tratativa do mês 2;
+   3. Refatorar o código e padronizar;
+   4. Enviar os dados para o excel;
+   5. Caminho no back para enviar os pdfs.

@@ -1,5 +1,4 @@
 # USANDO TABULA + PANDAS
-import os
 import pandas as pd
 from tabula import read_pdf
 import pdfplumber

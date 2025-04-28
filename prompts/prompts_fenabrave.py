@@ -76,7 +76,7 @@ def prompt_fenabrave_cumulative_brand_ranking(tabela_texto):
 
     A tabela a seguir representa **exclusivamente o 'Ranking por marca acumulado'**, contendo dados combinados de **automóveis e comerciais leves**.
 
-    ⚠️ **IMPORTANTE**:
+    **IMPORTANTE**:
     - Analise **somente a primeira tabela sequencial com os dados acumulados**.
     - Ignore completamente outras tabelas ou seções que contenham:
         - Dados com porcentagem (%)
