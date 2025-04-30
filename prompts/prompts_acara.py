@@ -11,93 +11,79 @@ def acara_market_summary(tabela_texto):
     1. Analisar e identificar os valores requisitados nas tabelas;
     2. Extrair os valores de acordo com o tipo de veículo solicitado;
     3. Retornar os valores sem arredondamentos e sem alterações, mantendo múltiplos números quando presentes.
+	4. Mantenha os valores exatamente como aparecem, inclusive com pontos separadores de milhar (ex: "11.537").
 
     **Instruções para extração de dados:**
-    1. Para "Autos + C.L.", extraia os valores da coluna F (valor) e da coluna G (valor).
-    2. Para "Autos + C.L. + C.P.", extraia os valores da coluna F (valor) e da coluna G (valor).
-    3. Para "Comercial Pesado", extraia os valores da coluna F (valor) e da coluna G (valor).
+    1. Para a linha "Autos + C.L.", extraia os valores da **coluna F** (Acumulado 2025) e **coluna G** (Acumulado 2024).
+    2. Para a linha "Autos + C.L. + C.P.", extraia os valores da **coluna F** e **coluna G**.
+    3. Para a linha "Comercial Pesado", extraia os valores da **coluna F** e **coluna G**.
 
-    **Nota**: 
-    - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
-    - Retorne o valor como string, sem alterar o formato.
+    **Importante**: Use a **letra da coluna** para localizar o valor, e **não o cabeçalho** ou o conteúdo do cabeçalho.
 
-    **OUTPUT**
-    "Autos + C.L.": 
-    Coluna F: value
-    Coluna G: value
-
-    ---
-
+    Formato de saída:
+    ```json
+        {{
+        "Marca": ["F", "G"],
+        ...
+        }}
 """
 
-def acara_40_lightweight_brands_ranking(tabela_texto): 
-	return f""" 
-	Você é uma Inteligência Artificial especializada em dados automobilísticos da ACARA. Sua tarefa é analisar e extrair os seguintes dados da categoria "Ranking. TOP 40. Marcas Livianos (Automóviles + Comerciales Livianos)":
+def acara_40_lightweight_brands_ranking(tabela_texto):
+    return f"""
+    Você é uma Inteligência Artificial especializada em dados automobilísticos da ACARA. Sua tarefa é extrair dados de vendas por marca a partir da seguinte tabela, em que as colunas estão identificadas apenas por letras (Categoria, A, B, C...).
 
-    **ENTRADA**
-    Aqui estão os dados extraídos da tabela de Ranking. TOP 40. Marcas Livianos (Automóviles + Comerciales Livianos):
-
+    ### Entrada:
     {tabela_texto}
 
-    Objetivo:
-    1. Analisar e identificar os valores requisitados nas tabelas;
-    2. Extrair os valores de acordo com o tipo de veículo solicitado;
-    3. Retornar os valores sem arredondamentos e sem alterações, mantendo múltiplos números quando presentes.
+    ### Objetivo:
+    Para cada linha com uma marca válida, extraia os seguintes valores fixos:
 
-    **Instruções para extração de dados:**
-    1. Para cada linha da tabela, extraia:
-    - Coluna A;
-    - Coluna C;
-    - Coluna E;
-    - Coluna F.
+    - Nome da marca → Coluna "Categoria"
+    - Para a linha que contém "Marca", extraia o valor da coluna B;
+    - Para a linha que contém "Marca", extraia o valor da coluna F;
+    - Para a linha que contém "Marca", extraia o valor da coluna J;
+    - Para a linha que contém "Marca", extraia o valor da coluna L;
 
-    **Nota**: 
-    - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
-    - Retorne o valor como string, sem alterar o formato.
+    ### Instruções:
+    - Use **apenas as letras das colunas** para localizar os valores. Ignore os títulos, nomes de meses ou quaisquer outras anotações nos cabeçalhos.
+    - Mantenha os valores exatamente como aparecem, inclusive com pontos como separador de milhar (ex: "11.537").
+    - Ignore linhas como "TOTAL", "RESTO", ou qualquer linha que não contenha uma marca de veículo válida.
 
-    **OUTPUT**
-    "Marca": 
-    Coluna A: value
-    Coluna C: value	
-    Coluna E: value
-    Coluna F: value
-
-    ---
-
+    ### Saída esperada:
+    ```json
+        {{
+        "Marca": ["B", "F", "J", "L"],
+        ...
+        }}
 """
+
 
 def acara_10_heavy_commercial_brands_ranking(tabela_texto):
-	return f""" 
-	Você é uma Inteligência Artificial especializada em dados automobilísticos da ACARA. Sua tarefa é analisar e extrair os seguintes dados da categoria "Ranking. TOP 10. Marcas Comerciales Pesados":
+    return f""" 
+    Você é uma Inteligência Artificial especializada em dados automobilísticos da ACARA. Sua tarefa é extrair dados de vendas por marca a partir da seguinte tabela, em que as colunas estão identificadas apenas por letras (Categoria, A, B, C...).
 
-    **ENTRADA**
-    Aqui estão os dados extraídos da tabela de Ranking. TOP 10. Marcas Comerciales Pesados:
-
+    ### Entrada:
     {tabela_texto}
 
-    Objetivo:
-    1. Analisar e identificar os valores requisitados nas tabelas;
-    2. Extrair os valores de acordo com o tipo de veículo solicitado;
-    3. Retornar os valores sem arredondamentos e sem alterações, mantendo múltiplos números quando presentes.
+    ### Objetivo:
+    Para cada linha com uma marca válida, extraia os seguintes valores fixos:
 
-    **Instruções para extração de dados:**
-    1. Para cada linha da tabela, extraia:
-    - Coluna A;
-    - Coluna C;
-    - Coluna E;
-    - Coluna F.
+    - Nome da marca → Coluna "Categoria"
+    - Para a linha que contém "Marca", extraia o valor da coluna B;
+    - Para a linha que contém "Marca", extraia o valor da coluna F;
+    - Para a linha que contém "Marca", extraia o valor da coluna J;
+    - Para a linha que contém "Marca", extraia o valor da coluna L;
 
-    **Nota**: 
-    - Caso um valor apareça na tabela em múltiplos números (como "20.395 6.976"), você deve considerar ambos os números separadamente e mantê-los no formato original.
-    - Retorne o valor como string, sem alterar o formato.
+    ### Instruções:
+    - Use **apenas a posição da coluna pela letra** para localizar os valores.
+    - Mantenha os valores exatamente como aparecem, com pontos como separador de milhar (ex: "11.537").
+    - Ignore linhas como “TOTAL”, “RESTO”, ou linhas incompletas.
 
-    **OUTPUT**
-    "Marca": 
-    Coluna A: value
-    Coluna C: value	
-    Coluna E: value
-    Coluna F: value
-
-    ---
-
+    ### Saída esperada:
+    ```json
+        {{
+        "Marca": ["B", "F", "J", "L"],
+        ...
+        }}
 """
+

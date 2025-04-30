@@ -2,6 +2,7 @@
 import pandas as pd
 from tabula import read_pdf
 import pdfplumber
+import re
 from azure_llm import create_azure_llm
 from prompts.prompts_acara import (
     acara_market_summary,
@@ -41,8 +42,9 @@ def extract_tables_acara(pdf_path, relevant_pages):
         tables = read_pdf(
             pdf_path,
             pages=str(page_number),
-            lattice=True,
+            stream=True,
             guess=True,
+            lattice=False,
             pandas_options={"header": None}
         )
 
@@ -50,31 +52,65 @@ def extract_tables_acara(pdf_path, relevant_pages):
             continue
 
         for titulo in titulos:
-            for table in tables:
-                df = table.copy()
-                df = df.dropna(how="all").fillna("")
-
-                if df.empty:
+            for df in tables:
+                if df.empty or df.shape[1] < 3:
                     continue
 
-                # Primeira coluna é a "Categoria" (tipo "Autos", "Total Mercado", etc)
-                categoria_col = df.iloc[:, 0].astype(str).str.strip()
-                df = df.drop(columns=[0])  # Remove a coluna antiga da categoria
+                df = df.dropna(how="all").fillna("")
+                df = df.loc[:, ~df.columns.duplicated()]
+                df = df.map(lambda x: str(x).replace("\r", " ").replace("  ", " ").strip())
 
-                # Resetar o índice para alinhar certinho
-                df = df.reset_index(drop=True)
+                df.rename(columns={0: "Categoria"}, inplace=True)
+                categorias = df["Categoria"]
+                df = df.drop(columns=["Categoria"])
 
-                # Nomear as colunas A, B, C, D... conforme o número de colunas restantes
-                colunas = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")[:df.shape[1]]
-                df.columns = colunas
+                def separar_valores_grudados(cell):
+                    if isinstance(cell, str):
+                        # separa valores como "11.53717,5%" em "11.537" e "17,5%"
+                        return re.sub(r"(\d+\.\d{3})(\d)", r"\1 \2", cell)
+                    return cell
 
-                # Inserir novamente a coluna "Categoria" na frente
-                df.insert(0, "Categoria", categoria_col)
+                # Preserva valores com separador de milhar (não quebra 11.537)
+                def preservar_valores(cell):
+                    if isinstance(cell, str):
+                        return re.sub(r'(\d) (\d)', r'\1\2', cell)
+                    return cell
+                df = df.map(preservar_valores).map(separar_valores_grudados)
 
-                extracted_data[titulo] = df
+                def split_cells(cell):
+                    if isinstance(cell, str) and re.search(r'\d{5,}', cell):
+                        return [cell]  # mantém como string única
+                    return [cell]
+
+                df_expanded = pd.DataFrame()
+                for col in df.columns:
+                    expanded = df[col].apply(split_cells)
+                    max_len = expanded.apply(len).max()
+                    cols_exp = pd.DataFrame(expanded.tolist(), columns=[f"{col}_{i}" for i in range(max_len)])
+                    df_expanded = pd.concat([df_expanded, cols_exp], axis=1)
+
+                df_final = pd.concat([categorias.reset_index(drop=True), df_expanded], axis=1)
+                df_final.rename(columns={0: "Categoria"}, inplace=True)
+
+                # Validação segura do número de colunas
+                num_colunas = df_final.shape[1] - 1
+                letras = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+                if num_colunas <= len(letras):
+                    df_final.columns = ["Categoria"] + letras[:num_colunas]
+                else:
+                    df_final.columns = ["Categoria"] + [f"Col_{i}" for i in range(1, num_colunas + 1)]
+
+                # Log para debug: mostra estrutura da tabela
+                print(f"\n✅ Tabela extraída: {titulo} | Página {page_number}")
+                print(f"🔢 Total de colunas (sem Categoria): {num_colunas}")
+                print(f"🔍 Primeira linha da tabela:\n{df_final.iloc[0]}")
+                
+                extracted_data[titulo] = df_final
                 break
 
     return extracted_data
+
+
 
 def process_pdf_and_generate_prompts_acara(pdf_path):
     relevant_pages = get_relevant_pages_and_titles_acara(pdf_path)
@@ -88,8 +124,8 @@ def process_pdf_and_generate_prompts_acara(pdf_path):
 
         prompt_func = TITULOS_RELEVANTES_ACARA[titulo]
 
-        # if prompt_func:
-        #     prompt = prompt_func(tabela_texto)
-        #     print("\n--- Análise com LLM ---")
-        #     resposta = llm.invoke([prompt])
-        #     print(resposta.content)
+        if prompt_func:
+            prompt = prompt_func(tabela_texto)
+            print("\n--- Análise com LLM ---")
+            resposta = llm.invoke([prompt])
+            print(resposta.content)
