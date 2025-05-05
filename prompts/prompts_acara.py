@@ -41,18 +41,17 @@ def acara_40_lightweight_brands_ranking(tabela_texto):
     - Nome da marca → Coluna "Categoria"
     - Para a linha que contém "Marca", extraia o valor da coluna B;
     - Para a linha que contém "Marca", extraia o valor da coluna F;
-    - Para a linha que contém "Marca", extraia o valor da coluna J;
-    - Para a linha que contém "Marca", extraia o valor da coluna L;
+    - Para a linha que contém "Marca", extraia o valor da coluna I;
+    - Para a linha que contém "Marca", extraia o valor da coluna K;
 
     ### Instruções:
     - Use **apenas as letras das colunas** para localizar os valores. Ignore os títulos, nomes de meses ou quaisquer outras anotações nos cabeçalhos.
     - Mantenha os valores exatamente como aparecem, inclusive com pontos como separador de milhar (ex: "11.537").
-    - Ignore linhas como "TOTAL", "RESTO", ou qualquer linha que não contenha uma marca de veículo válida.
 
     ### Saída esperada:
     ```json
         {{
-        "Marca": ["B", "F", "J", "L"],
+        "Marca": ["B", "F", "I", "K"],
         ...
         }}
 """
@@ -78,11 +77,12 @@ def acara_10_heavy_commercial_brands_ranking(tabela_texto):
     - Use **apenas a posição da coluna pela letra** para localizar os valores.
     - Mantenha os valores exatamente como aparecem, com pontos como separador de milhar (ex: "11.537").
     - Ignore linhas como “TOTAL”, “RESTO”, ou linhas incompletas.
+    - Ignore colunas com porcentagens.
 
     ### Saída esperada:
     ```json
         {{
-        "Marca": ["B", "F", "J", "L"],
+        "Marca": ["B", "F", "I", "K"],
         ...
         }}
 """

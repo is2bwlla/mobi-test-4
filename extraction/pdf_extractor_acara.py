@@ -1,4 +1,3 @@
-# ACARA - Extração de tabelas com primeira coluna como CATEGORIA
 import pandas as pd
 from tabula import read_pdf
 import pdfplumber
@@ -10,12 +9,19 @@ from prompts.prompts_acara import (
     acara_10_heavy_commercial_brands_ranking,
 )
 
-# Para visualizar melhor as tabelas
+def guess_table_title(pagina: int, tabela_texto: str, pdf_path: str) -> str | None:
+    if pagina == 8 and "TOP 40" in tabela_texto and "FIAT" in tabela_texto:
+        return "TABLA 2. Ranking. TOP 40. Marcas Livianos (Automóviles + Comerciales Livianos)"
+    if pagina == 9 and "TOP 10" in tabela_texto and "Mercedes-Benz" in tabela_texto:
+        return "TABLA 4. Ranking. TOP 10. Marcas Comerciales Pesados"
+    if pagina == 10 and "TOTAL MERCADO" in tabela_texto:
+        return "TABLA 1. Resumen del mercado."
+    return None
+
 pd.set_option("display.max_columns", None)
 pd.set_option("display.max_rows", None)
 pd.set_option("display.width", 1000)
 
-# Mapeamento dos títulos relevantes
 TITULOS_RELEVANTES_ACARA = {
     "TABLA 1. Resumen del mercado.": acara_market_summary,
     "TABLA 2. Ranking. TOP 40. Marcas Livianos (Automóviles + Comerciales Livianos)": acara_40_lightweight_brands_ranking,
@@ -27,12 +33,10 @@ def get_relevant_pages_and_titles_acara(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
         for page_number, page in enumerate(pdf.pages, start=1):
             text = page.extract_text() or ""
-            text = text.replace("\n", " ").replace("  ", " ").strip()
+            text = re.sub(r"\s{2,}", " ", text.replace("\n", " ")).strip()
             for title in TITULOS_RELEVANTES_ACARA:
                 if title in text:
-                    if page_number not in relevant_pages:
-                        relevant_pages[page_number] = []
-                    relevant_pages[page_number].append(title)
+                    relevant_pages.setdefault(page_number, []).append(title)
     return relevant_pages
 
 def extract_tables_acara(pdf_path, relevant_pages):
@@ -51,66 +55,56 @@ def extract_tables_acara(pdf_path, relevant_pages):
         if not tables:
             continue
 
-        for titulo in titulos:
-            for df in tables:
-                if df.empty or df.shape[1] < 3:
-                    continue
+        for tabela in tables:
+            if tabela.empty or tabela.shape[1] < 3:
+                continue
 
-                df = df.dropna(how="all").fillna("")
-                df = df.loc[:, ~df.columns.duplicated()]
-                df = df.map(lambda x: str(x).replace("\r", " ").replace("  ", " ").strip())
+            tabela = tabela.dropna(how="all").fillna("")
+            tabela = tabela.loc[:, ~tabela.columns.duplicated()]
+            tabela = tabela.map(lambda x: str(x).replace("\r", " ").replace("  ", " ").strip())
 
-                df.rename(columns={0: "Categoria"}, inplace=True)
-                categorias = df["Categoria"]
-                df = df.drop(columns=["Categoria"])
+            tabela.rename(columns={0: "Categoria"}, inplace=True)
+            categorias = tabela["Categoria"]
+            tabela = tabela.drop(columns=["Categoria"])
 
-                def separar_valores_grudados(cell):
-                    if isinstance(cell, str):
-                        # separa valores como "11.53717,5%" em "11.537" e "17,5%"
-                        return re.sub(r"(\d+\.\d{3})(\d)", r"\1 \2", cell)
-                    return cell
+            def preservar_valores(cell):
+                if isinstance(cell, str):
+                    return re.sub(r'(\d) (\d)', r'\1\2', cell)
+                return cell
+            tabela = tabela.map(preservar_valores)
 
-                # Preserva valores com separador de milhar (não quebra 11.537)
-                def preservar_valores(cell):
-                    if isinstance(cell, str):
-                        return re.sub(r'(\d) (\d)', r'\1\2', cell)
-                    return cell
-                df = df.map(preservar_valores).map(separar_valores_grudados)
-
-                def split_cells(cell):
-                    if isinstance(cell, str) and re.search(r'\d{5,}', cell):
-                        return [cell]  # mantém como string única
+            def split_cells(cell):
+                if isinstance(cell, str) and re.search(r'\d{5,}', cell):
                     return [cell]
+                return [cell]
 
-                df_expanded = pd.DataFrame()
-                for col in df.columns:
-                    expanded = df[col].apply(split_cells)
-                    max_len = expanded.apply(len).max()
-                    cols_exp = pd.DataFrame(expanded.tolist(), columns=[f"{col}_{i}" for i in range(max_len)])
-                    df_expanded = pd.concat([df_expanded, cols_exp], axis=1)
+            tabela_expandida = pd.DataFrame()
+            for col in tabela.columns:
+                expanded = tabela[col].apply(split_cells)
+                max_len = expanded.apply(len).max()
+                cols_exp = pd.DataFrame(expanded.tolist(), columns=[f"{col}_{i}" for i in range(max_len)])
+                tabela_expandida = pd.concat([tabela_expandida, cols_exp], axis=1)
 
-                df_final = pd.concat([categorias.reset_index(drop=True), df_expanded], axis=1)
-                df_final.rename(columns={0: "Categoria"}, inplace=True)
+            tabela_final = pd.concat([categorias.reset_index(drop=True), tabela_expandida], axis=1)
 
-                # Validação segura do número de colunas
-                num_colunas = df_final.shape[1] - 1
-                letras = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-                if num_colunas <= len(letras):
-                    df_final.columns = ["Categoria"] + letras[:num_colunas]
-                else:
-                    df_final.columns = ["Categoria"] + [f"Col_{i}" for i in range(1, num_colunas + 1)]
+            num_colunas = tabela_final.shape[1] - 1
+            letras = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+            if num_colunas <= len(letras):
+                tabela_final.columns = ["Categoria"] + letras[:num_colunas]
+            else:
+                tabela_final.columns = ["Categoria"] + [f"Col_{i}" for i in range(1, num_colunas + 1)]
 
-                # Log para debug: mostra estrutura da tabela
-                print(f"\n✅ Tabela extraída: {titulo} | Página {page_number}")
-                print(f"🔢 Total de colunas (sem Categoria): {num_colunas}")
-                print(f"🔍 Primeira linha da tabela:\n{df_final.iloc[0]}")
-                
-                extracted_data[titulo] = df_final
-                break
+            titulo_detectado = titulos[0] if titulos else None
+
+            if not titulo_detectado or titulo_detectado not in TITULOS_RELEVANTES_ACARA:
+                tabela_texto = tabela_final.to_string(index=False, header=True)
+                titulo_detectado = guess_table_title(page_number, tabela_texto, pdf_path)
+
+            if titulo_detectado and titulo_detectado in TITULOS_RELEVANTES_ACARA:
+                extracted_data[titulo_detectado] = tabela_final
+                break  # Garante só uma tabela por página
 
     return extracted_data
-
-
 
 def process_pdf_and_generate_prompts_acara(pdf_path):
     relevant_pages = get_relevant_pages_and_titles_acara(pdf_path)
@@ -122,8 +116,7 @@ def process_pdf_and_generate_prompts_acara(pdf_path):
         tabela_texto = table.to_string(index=False, header=True)
         print(tabela_texto)
 
-        prompt_func = TITULOS_RELEVANTES_ACARA[titulo]
-
+        prompt_func = TITULOS_RELEVANTES_ACARA.get(titulo)
         if prompt_func:
             prompt = prompt_func(tabela_texto)
             print("\n--- Análise com LLM ---")
