@@ -20,12 +20,20 @@ def acara_market_summary(tabela_texto):
 
     **Importante**: Use a **letra da coluna** para localizar o valor, e **não o cabeçalho** ou o conteúdo do cabeçalho.
 
-    Formato de saída:
-    ```json
-        {{
-        "Marca": ["F", "G"],
-        ...
-        }}
+    **OUTPUT**
+    "Autos + C.L.":
+    Coluna F: value
+    Coluna G: value
+
+    "Autos + C.L. + C.P.":
+    Coluna F: value
+    Coluna G: value
+
+    "Comercial Pesado":
+    Coluna F: value
+    Coluna G: value
+
+    ---
 """
 
 def acara_40_lightweight_brands_ranking(tabela_texto):
@@ -48,12 +56,14 @@ def acara_40_lightweight_brands_ranking(tabela_texto):
     - Use **apenas as letras das colunas** para localizar os valores. Ignore os títulos, nomes de meses ou quaisquer outras anotações nos cabeçalhos.
     - Mantenha os valores exatamente como aparecem, inclusive com pontos como separador de milhar (ex: "11.537").
 
-    ### Saída esperada:
-    ```json
-        {{
-        "Marca": ["B", "F", "I", "K"],
-        ...
-        }}
+    ### OUTPUT
+    Marca:
+    Coluna B: value
+    Coluna F: value
+    Coluna I: value
+    Coluna K: value
+
+    ---
 """
 
 
@@ -79,11 +89,13 @@ def acara_10_heavy_commercial_brands_ranking(tabela_texto):
     - Ignore linhas como “TOTAL”, “RESTO”, ou linhas incompletas.
     - Ignore colunas com porcentagens.
 
-    ### Saída esperada:
-    ```json
-        {{
-        "Marca": ["B", "F", "I", "K"],
-        ...
-        }}
+    ### OUTPUT
+    Marca:
+    Coluna B: value
+    Coluna F: value
+    Coluna J: value
+    Coluna L: value
+
+    ---
 """
 
